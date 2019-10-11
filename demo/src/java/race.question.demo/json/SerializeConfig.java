@@ -23,7 +23,7 @@ public class SerializeConfig {
 
     public final static SerializeConfig GLOBAL_INSTANCE = new SerializeConfig();
 
-    private final ConcurrentHashMap<Class, ObjectSerializer> mixInSerializers;
+    private final Map<Class, ObjectSerializer> mixInSerializers;
     private final String javaBeanSerializer;
     private final String jsonSerializer;
     private final String classPath;
@@ -38,10 +38,10 @@ public class SerializeConfig {
         classPath = packageName.replace('.', '/') + "/";
 
         javaBeanSerializer = classPath + "JavaBeanSerializer";
-        jsonSerializer = classPath + "jsonSerializer";
-        serializeWriter = classPath + "serializeWriter";
+        jsonSerializer = classPath + "JSONSerializer";
+        serializeWriter = classPath + "SerializeWriter";
 
-        this.mixInSerializers = new ConcurrentHashMap<>(32);
+        this.mixInSerializers = new HashMap<>();
         initSerialize();
     }
 
