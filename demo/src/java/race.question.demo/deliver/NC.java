@@ -20,11 +20,11 @@ public class NC {
     private final static List<DeliverWay> WAYS = new ArrayList<>(5);
 
     static {
-        WAYS.add(FixedSpecificDeliver.instance);
-        WAYS.add(ProportionalSpecificDeliver.instance);
-        WAYS.add(ZoneProjectDeliver.instance);
-        WAYS.add(ProjectDeliver.instance);
-        WAYS.add(NoDeliver.instance);
+        WAYS.add(FixedSpecificDeliver.INSTANCE);
+        WAYS.add(ProportionalSpecificDeliver.INSTANCE);
+        WAYS.add(ZoneProjectDeliver.INSTANCE);
+        WAYS.add(ProjectDeliver.INSTANCE);
+        WAYS.add(NoDeliver.INSTANCE);
 
         initDeliverRule();
     }
@@ -107,8 +107,8 @@ public class NC {
         info2.setLeftToOwn(false);
         info2.setFixed(false);
 
-        ProjectDeliver.instance.addInfo(info1);
-        ProjectDeliver.instance.addInfo(info2);
+        ProjectDeliver.INSTANCE.addInfo(info1);
+        ProjectDeliver.INSTANCE.addInfo(info2);
 
         // 区划项目分成
         ZoneProjectDeliverInfo info3 = new ZoneProjectDeliverInfo();
@@ -134,8 +134,8 @@ public class NC {
         info4.setUpToDown(true);
         info4.setLeftToOwn(false);
 
-        ZoneProjectDeliver.instance.addInfo(info3);
-        ZoneProjectDeliver.instance.addInfo(info4);
+        ZoneProjectDeliver.INSTANCE.addInfo(info3);
+        ZoneProjectDeliver.INSTANCE.addInfo(info4);
 
         // 定额特定分
         SpecificDeliverInfo info5 = new SpecificDeliverInfo();
@@ -166,7 +166,7 @@ public class NC {
         list.add(info5);
         list.add(info6);
         list.add(info7);
-        FixedSpecificDeliver.instance.addInfo(list);
+        FixedSpecificDeliver.INSTANCE.addInfo(list);
 
         // 比例特定分
         SpecificDeliverInfo info8 = new SpecificDeliverInfo();
@@ -197,7 +197,7 @@ public class NC {
         list2.add(info8);
         list2.add(info9);
         list2.add(info10);
-        ProportionalSpecificDeliver.instance.addInfo(list2);
+        ProportionalSpecificDeliver.INSTANCE.addInfo(list2);
 
         Zone.initZoneMap();
     }

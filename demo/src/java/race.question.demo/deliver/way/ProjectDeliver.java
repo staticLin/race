@@ -18,7 +18,7 @@ public class ProjectDeliver implements DeliverWay {
 
     public final Map<Integer, ZoneProjectDeliverInfo> map = new HashMap<>();
 
-    public static final ProjectDeliver instance = new ProjectDeliver();
+    public static final ProjectDeliver INSTANCE = new ProjectDeliver();
 
     /**
      * 以项目为标示去分成

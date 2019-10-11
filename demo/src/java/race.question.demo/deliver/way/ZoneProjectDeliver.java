@@ -18,7 +18,7 @@ public class ZoneProjectDeliver implements DeliverWay {
 
     public static final int ZONE_PROJECT_DELIVER = 1 << 4;
 
-    public static final ZoneProjectDeliver instance = new ZoneProjectDeliver();
+    public static final ZoneProjectDeliver INSTANCE = new ZoneProjectDeliver();
 
     public final Map<Zone, ZoneProjectDeliverInfo> map = new HashMap<>();
 

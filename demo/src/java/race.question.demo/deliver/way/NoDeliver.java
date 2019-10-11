@@ -10,7 +10,7 @@ import race.question.demo.deliver.pojo.Result;
  */
 public class NoDeliver implements DeliverWay {
 
-    public static final NoDeliver instance = new NoDeliver();
+    public static final NoDeliver INSTANCE = new NoDeliver();
 
     /**
      * 不分成，将收入纳入执收区划

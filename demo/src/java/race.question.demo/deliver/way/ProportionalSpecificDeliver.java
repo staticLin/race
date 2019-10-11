@@ -18,7 +18,7 @@ public class ProportionalSpecificDeliver implements DeliverWay {
 
     public static final int PROPORTIONAL_SPECIFIC_DELIVER = 1 << 3;
 
-    public static final ProportionalSpecificDeliver instance = new ProportionalSpecificDeliver();
+    public static final ProportionalSpecificDeliver INSTANCE = new ProportionalSpecificDeliver();
 
     public final Map<Integer, List<SpecificDeliverInfo>> specificMap = new HashMap<>();
 

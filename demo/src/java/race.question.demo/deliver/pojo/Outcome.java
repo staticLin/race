@@ -28,9 +28,9 @@ public class Outcome {
 
     @Override
     public String toString() {
-        return "Outcome{" +
-                "zone=" + zone +
-                ", amount=" + amount +
+        return "资金分解: {" +
+                "区划=" + zone.getZoneName() +
+                ", 分得金额=" + amount +
                 '}';
     }
 }

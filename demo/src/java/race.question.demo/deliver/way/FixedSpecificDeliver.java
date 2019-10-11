@@ -18,7 +18,7 @@ public class FixedSpecificDeliver implements DeliverWay {
 
     public static final int FIX_SPECIFIC_DELIVER = 1 << 1;
 
-    public static final FixedSpecificDeliver instance = new FixedSpecificDeliver();
+    public static final FixedSpecificDeliver INSTANCE = new FixedSpecificDeliver();
 
     public final Map<Integer, List<SpecificDeliverInfo>> specificMap = new HashMap<>();
 
