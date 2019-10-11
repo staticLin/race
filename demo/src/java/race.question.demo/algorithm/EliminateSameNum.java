@@ -101,7 +101,7 @@ public class EliminateSameNum {
                 break;
             default:
                 // wrong input
-                throw new UnsupportedOperationException();
+                return;
         }
 
         // 落下之后
