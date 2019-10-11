@@ -17,14 +17,14 @@ import java.util.List;
  */
 public class NC {
 
-    public static List<DeliverWay> wayList = new ArrayList<>(5);
+    private final static List<DeliverWay> WAYS = new ArrayList<>(5);
 
     static {
-        wayList.add(FixedSpecificDeliver.instance);
-        wayList.add(ProportionalSpecificDeliver.instance);
-        wayList.add(ZoneProjectDeliver.instance);
-        wayList.add(ProjectDeliver.instance);
-        wayList.add(NoDeliver.instance);
+        WAYS.add(FixedSpecificDeliver.instance);
+        WAYS.add(ProportionalSpecificDeliver.instance);
+        WAYS.add(ZoneProjectDeliver.instance);
+        WAYS.add(ProjectDeliver.instance);
+        WAYS.add(NoDeliver.instance);
 
         initDeliverRule();
     }
@@ -56,7 +56,7 @@ public class NC {
 
         Result res = new Result();
 
-        for (DeliverWay deliverWay : wayList) {
+        for (DeliverWay deliverWay : WAYS) {
 
             if (deliverWay.isHandle(income)) {
 
