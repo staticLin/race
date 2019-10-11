@@ -54,10 +54,12 @@ public class EliminateSameNum {
 
         int round = 1;
 
+        // 记录相同的数字到record数组中
         while (recordSameNum(array, record, round)) {
 
+            // 调整数组，将record数组记录的需要消除的数据置为零
             adjustArray(array, record, round, direction);
-
+            // 提升轮次，轮次用于记录在record数组中
             round++;
         }
     }
