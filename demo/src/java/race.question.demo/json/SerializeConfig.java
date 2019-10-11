@@ -6,6 +6,8 @@ import race.question.demo.json.serializer.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -19,13 +21,13 @@ public class SerializeConfig {
 
     private final AtomicLong seed = new AtomicLong();
 
-    public final static SerializeConfig globalInstance = new SerializeConfig();
+    public final static SerializeConfig GLOBAL_INSTANCE = new SerializeConfig();
 
     private final ConcurrentHashMap<Class, ObjectSerializer> mixInSerializers;
     private final String javaBeanSerializer;
-    private final String JSONSerializer;
+    private final String jsonSerializer;
     private final String classPath;
-    private final String SerializeWriter;
+    private final String serializeWriter;
     private final String packageName;
 
     public SerializeConfig() {
@@ -36,32 +38,31 @@ public class SerializeConfig {
         classPath = packageName.replace('.', '/') + "/";
 
         javaBeanSerializer = classPath + "JavaBeanSerializer";
-        JSONSerializer = classPath + "JSONSerializer";
-        SerializeWriter = classPath + "SerializeWriter";
+        jsonSerializer = classPath + "jsonSerializer";
+        serializeWriter = classPath + "serializeWriter";
 
-        // TODO 初始化容量？
-        this.mixInSerializers = new ConcurrentHashMap<>();
+        this.mixInSerializers = new ConcurrentHashMap<>(32);
         initSerialize();
     }
 
     private void initSerialize() {
 
-        this.mixInSerializers.put(int[].class, ArraySerializer.instance);
-        this.mixInSerializers.put(char[].class, ArraySerializer.instance);
-        this.mixInSerializers.put(short[].class, ArraySerializer.instance);
-        this.mixInSerializers.put(byte[].class, ArraySerializer.instance);
-        this.mixInSerializers.put(long[].class, ArraySerializer.instance);
-        this.mixInSerializers.put(double[].class, ArraySerializer.instance);
-        this.mixInSerializers.put(boolean[].class, ArraySerializer.instance);
-        this.mixInSerializers.put(float[].class, ArraySerializer.instance);
-        this.mixInSerializers.put(Object[].class, ArraySerializer.instance);
+        this.mixInSerializers.put(int[].class, ArraySerializer.INSTANCE);
+        this.mixInSerializers.put(char[].class, ArraySerializer.INSTANCE);
+        this.mixInSerializers.put(short[].class, ArraySerializer.INSTANCE);
+        this.mixInSerializers.put(byte[].class, ArraySerializer.INSTANCE);
+        this.mixInSerializers.put(long[].class, ArraySerializer.INSTANCE);
+        this.mixInSerializers.put(double[].class, ArraySerializer.INSTANCE);
+        this.mixInSerializers.put(boolean[].class, ArraySerializer.INSTANCE);
+        this.mixInSerializers.put(float[].class, ArraySerializer.INSTANCE);
+        this.mixInSerializers.put(Object[].class, ArraySerializer.INSTANCE);
 
-        this.mixInSerializers.put(Collection.class, CollectionSerializer.instance);
-        this.mixInSerializers.put(Map.class, MapSerializer.instance);
+        this.mixInSerializers.put(Collection.class, CollectionSerializer.INSTANCE);
+        this.mixInSerializers.put(Map.class, MapSerializer.INSTANCE);
 
-        this.mixInSerializers.put(Enum.class, EnumSerializer.instance);
-        this.mixInSerializers.put(String.class, StringSerializer.instance);
-        this.mixInSerializers.put(Date.class, StringSerializer.instance);
+        this.mixInSerializers.put(Enum.class, EnumSerializer.INSTANCE);
+        this.mixInSerializers.put(String.class, StringSerializer.INSTANCE);
+        this.mixInSerializers.put(Date.class, StringSerializer.INSTANCE);
     }
 
     private ObjectSerializer get(Class type) {
@@ -76,14 +77,15 @@ public class SerializeConfig {
 
     public ObjectSerializer getObjectWriter(Class<?> clazz) {
 
-        if (clazz.isEnum())
+        if (clazz.isEnum()) {
             return get(Enum.class);
-        else if (Map.class.isAssignableFrom(clazz))
+        } else if (Map.class.isAssignableFrom(clazz)) {
             return get(Map.class);
-        else if (isPrimitive(clazz))
+        } else if (isPrimitive(clazz)) {
             return get(String.class);
-        else if (Collection.class.isAssignableFrom(clazz))
+        } else if (Collection.class.isAssignableFrom(clazz)) {
             return get(Collection.class);
+        }
 
         ObjectSerializer writer = get(clazz);
 
@@ -107,11 +109,12 @@ public class SerializeConfig {
         SerializeBeanInfo beanInfo = new SerializeBeanInfo();
 
         // beanType
-        beanInfo.setBeanType(clazz);
+        beanInfo.beanType = clazz;
 
         // FieldInfo[] -> field
         Method[] methods = clazz.getMethods();
-        List<FieldInfo> fieldInfos = new ArrayList<>(methods.length >> 1);
+
+        List<FieldInfo> fieldInfos = new ArrayList<>();
 
         for (Method method : methods) {
 
@@ -123,10 +126,7 @@ public class SerializeConfig {
                 if (methodName.length() < 4) {
                     continue;
                 }
-                if (methodName.equals("getClass")) {
-                    continue;
-                }
-                if (methodName.equals("getDeclaringClass") && clazz.isEnum()) {
+                if ("getClass".equals(methodName)) {
                     continue;
                 }
                 propertyName = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
@@ -166,14 +166,14 @@ public class SerializeConfig {
             // 返回类型（非原生）
             // 方法名 getAge
             // 字段名 age
-            FieldInfo fieldInfo = new FieldInfo(primitive, returnType, methodName, propertyName);
+            FieldInfo fieldInfo = new FieldInfo(primitive, returnType, methodName, propertyName, method);
             fieldInfos.add(fieldInfo);
         }
 
         if (!fieldInfos.isEmpty()) {
             FieldInfo[] fields = new FieldInfo[fieldInfos.size()];
             fieldInfos.toArray(fields);
-            beanInfo.setFields(fields);
+            beanInfo.fields = fields;
         }
 
         return beanInfo;
@@ -195,15 +195,8 @@ public class SerializeConfig {
 
     public JavaBeanSerializer createASMSerializer(SerializeBeanInfo beanInfo) throws Exception {
         Class<?> clazz = beanInfo.beanType;
-        if (clazz.isPrimitive()) {
-            throw new Exception("unsupportd class " + clazz.getName());
-        }
 
         FieldInfo[] getters = beanInfo.fields;
-
-        if (getters.length > 256) {
-            return new JavaBeanSerializer(beanInfo);
-        }
 
         String className = "ASMSerializer_" + seed.incrementAndGet() + "_" + clazz.getSimpleName();
         String fullClassName;
@@ -215,7 +208,7 @@ public class SerializeConfig {
         ClassWriter cw = new ClassWriter(0);
         MethodVisitor mv;
 
-        cw.visit(52, ACC_PUBLIC + ACC_SUPER, fullClassName, null, classPath + "JavaBeanSerializer", null);
+        cw.visit(52, ACC_PUBLIC + ACC_SUPER, fullClassName, null, javaBeanSerializer, null);
 
         {
             mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
@@ -228,17 +221,16 @@ public class SerializeConfig {
         }
 
         {
-
-            mv = cw.visitMethod(ACC_PUBLIC, "write", "(L" + JSONSerializer + ";Ljava/lang/Object;)V", null, new String[]{"java/lang/Exception"});
+            mv = cw.visitMethod(ACC_PUBLIC, "write", "(L" + jsonSerializer + ";Ljava/lang/Object;)V", null, new String[]{"java/lang/Exception"});
             mv.visitCode();
 
             mv.visitVarInsn(ALOAD, 1);
-            mv.visitFieldInsn(GETFIELD, JSONSerializer, "out", "L" + SerializeWriter + ";");
+            mv.visitFieldInsn(GETFIELD, jsonSerializer, "out", "L" + serializeWriter + ";");
             mv.visitVarInsn(ASTORE, 3);
 
             mv.visitVarInsn(ALOAD, 3);
             mv.visitIntInsn(BIPUSH, 123);
-            mv.visitFieldInsn(PUTFIELD, SerializeWriter, "preSymbol", "C");
+            mv.visitFieldInsn(PUTFIELD, serializeWriter, "preSymbol", "C");
 
             mv.visitVarInsn(ALOAD, 2);
             mv.visitTypeInsn(CHECKCAST, jsonObjectClassName);
@@ -246,48 +238,47 @@ public class SerializeConfig {
 
             int index = 6;
 
-            for (int i = 0; i < getters.length; i++) {
+            for (FieldInfo getter : getters) {
 
-                FieldInfo getter = getters[i];
-                mv.visitLdcInsn(getter.getFieldName());
+                mv.visitLdcInsn(getter.fieldName);
                 mv.visitVarInsn(ASTORE, 5);
 
                 mv.visitVarInsn(ALOAD, 4);
                 switch (getter.primitive) {
                     case "int":
-                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.getMethodName(), "()I", false);
+                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, "()I", false);
                         mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
                         break;
                     case "byte":
-                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.getMethodName(), "()B", false);
+                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, "()B", false);
                         mv.visitMethodInsn(INVOKESTATIC, "java/lang/Byte", "valueOf", "(B)Ljava/lang/Byte;", false);
                         break;
                     case "short":
-                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.getMethodName(), "()S", false);
+                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, "()S", false);
                         mv.visitMethodInsn(INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;", false);
                         break;
                     case "boolean":
-                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.getMethodName(), "()Z", false);
+                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, "()Z", false);
                         mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;", false);
                         break;
                     case "float":
-                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.getMethodName(), "()F", false);
+                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, "()F", false);
                         mv.visitMethodInsn(INVOKESTATIC, "java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false);
                         break;
                     case "double":
-                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.getMethodName(), "()D", false);
+                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, "()D", false);
                         mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;", false);
                         break;
                     case "long":
-                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.getMethodName(), "()J", false);
+                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, "()J", false);
                         mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;", false);
                         break;
                     case "char":
-                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.getMethodName(), "()C", false);
+                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, "()C", false);
                         mv.visitMethodInsn(INVOKESTATIC, "java/lang/Character", "valueOf", "(C)Ljava/lang/Character;", false);
                         break;
                     default:
-                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.getMethodName(), getter.returnType, false);
+                        mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, getter.returnType, false);
                         break;
                 }
 
@@ -296,10 +287,10 @@ public class SerializeConfig {
                 mv.visitVarInsn(ALOAD, 3);
                 mv.visitVarInsn(ALOAD, 5);
                 mv.visitVarInsn(ALOAD, index++);
-                mv.visitMethodInsn(INVOKEVIRTUAL, SerializeWriter, "writeObject", "(Ljava/lang/String;Ljava/lang/Object;)V", false);
+                mv.visitMethodInsn(INVOKEVIRTUAL, serializeWriter, "writeObject", "(Ljava/lang/String;Ljava/lang/Object;)V", false);
             }
             mv.visitVarInsn(ALOAD, 3);
-            mv.visitMethodInsn(INVOKEVIRTUAL, SerializeWriter, "end", "()V", false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, serializeWriter, "end", "()V", false);
             mv.visitInsn(RETURN);
 
             mv.visitMaxs(4, index);
@@ -309,7 +300,7 @@ public class SerializeConfig {
 
         byte[] code = cw.toByteArray();
 
-        ASMClassLoader classLoader = ASMClassLoader.instance;
+        ASMClassLoader classLoader = ASMClassLoader.INSTANCE;
         Class<?> serializerClass = classLoader.defineClassPublic(defineClassName, code, 0, code.length);
 
         Constructor<?> constructor = serializerClass.getConstructor();
@@ -320,7 +311,8 @@ public class SerializeConfig {
 
     public static class ASMClassLoader extends ClassLoader {
 
-        public static final ASMClassLoader instance = new ASMClassLoader();
+        private static final ASMClassLoader INSTANCE = AccessController.doPrivileged(
+                (PrivilegedAction<ASMClassLoader>) ASMClassLoader::new);
 
         public ASMClassLoader() {
             super(getParentClassLoader());
@@ -329,7 +321,7 @@ public class SerializeConfig {
         private static ClassLoader getParentClassLoader() {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-            if (classLoader == null) classLoader = JSON.class.getClassLoader();
+            if (classLoader == null) classLoader = JsonUtil.class.getClassLoader();
 
             return classLoader;
         }

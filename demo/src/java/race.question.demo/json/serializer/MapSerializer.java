@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class MapSerializer implements ObjectSerializer {
 
-    public static final MapSerializer instance = new MapSerializer();
+    public static final MapSerializer INSTANCE = new MapSerializer();
 
     @Override
     public void write(JSONSerializer serializer, Object value) throws Exception {
@@ -67,12 +67,13 @@ public class MapSerializer implements ObjectSerializer {
 
     private void write0(ObjectSerializer valueSerializer, Object v, JSONSerializer serializer) throws Exception {
 
-        if (v == null) serializer.out.writeNull();
-        else {
-            if (valueSerializer == null)
-                valueSerializer = SerializeConfig.globalInstance.getObjectWriter(v.getClass());
+        if (v == null) {
+            serializer.out.writeNull();
+        } else {
+            if (valueSerializer == null) {
+                valueSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(v.getClass());
+            }
 
-            if (valueSerializer == null) throw new RuntimeException("can not serializer object");
             valueSerializer.write(serializer, v);
         }
     }

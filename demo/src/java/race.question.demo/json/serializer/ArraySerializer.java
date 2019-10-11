@@ -10,95 +10,113 @@ import race.question.demo.json.SerializeWriter;
  */
 public class ArraySerializer implements ObjectSerializer {
 
-    public static final ArraySerializer instance = new ArraySerializer();
+    public static final ArraySerializer INSTANCE = new ArraySerializer();
+
+    private ArraySerializer() {
+    }
 
     @Override
-    public void write(JSONSerializer serializer, Object value) throws Exception {
+    public void write(final JSONSerializer serializer, final Object value) throws Exception {
 
-        SerializeWriter out = serializer.out;
+        final SerializeWriter out = serializer.out;
         out.write('[');
 
         if (value instanceof int[]) {
 
-            int[] array = (int[]) value;
+            final int[] array = (int[]) value;
 
             for (int i = 0; i < array.length; i++) {
 
-                if (i != 0) out.write(',');
-                out.write(Integer.valueOf(array[i]).toString());
+                if (i != 0) {
+                    out.write(',');
+                }
+                out.write(Integer.toString(array[i]));
             }
         } else if (value instanceof byte[]) {
 
-            byte[] array = (byte[]) value;
+            final byte[] array = (byte[]) value;
 
             for (int i = 0; i < array.length; i++) {
 
-                if (i != 0) out.write(',');
-                out.write(Byte.valueOf(array[i]).toString());
+                if (i != 0) {
+                    out.write(',');
+                }
+                out.write(Byte.toString(array[i]));
             }
         } else if (value instanceof short[]) {
 
-            short[] array = (short[]) value;
+            final short[] array = (short[]) value;
 
             for (int i = 0; i < array.length; i++) {
 
-                if (i != 0) out.write(',');
-                out.write(Short.valueOf(array[i]).toString());
+                if (i != 0) {
+                    out.write(',');
+                }
+                out.write(Short.toString(array[i]));
             }
         } else if (value instanceof long[]) {
 
-            long[] array = (long[]) value;
+            final long[] array = (long[]) value;
 
             for (int i = 0; i < array.length; i++) {
 
-                if (i != 0) out.write(',');
-                out.write(Long.valueOf(array[i]).toString());
+                if (i != 0) {
+                    out.write(',');
+                }
+                out.write(Long.toString(array[i]));
             }
         } else if (value instanceof boolean[]) {
 
-            boolean[] array = (boolean[]) value;
+            final boolean[] array = (boolean[]) value;
 
             for (int i = 0; i < array.length; i++) {
 
-                if (i != 0) out.write(',');
-                out.write(Boolean.valueOf(array[i]).toString());
+                if (i != 0) {
+                    out.write(',');
+                }
+                out.write(Boolean.toString(array[i]));
             }
         } else if (value instanceof double[]) {
 
-            double[] array = (double[]) value;
+            final double[] array = (double[]) value;
 
             for (int i = 0; i < array.length; i++) {
 
-                if (i != 0) out.write(',');
-                out.write(Double.valueOf(array[i]).toString());
+                if (i != 0) {
+                    out.write(',');
+                }
+                out.write(Double.toString(array[i]));
             }
         } else if (value instanceof char[]) {
 
-            char[] array = (char[]) value;
+            final char[] array = (char[]) value;
 
             for (int i = 0; i < array.length; i++) {
 
-                if (i != 0) out.write(',');
-                out.write(Character.valueOf(array[i]).toString());
+                if (i != 0) {
+                    out.write(',');
+                }
+                out.write(Character.toString(array[i]));
             }
         } else if (value instanceof float[]) {
 
-            float[] array = (float[]) value;
+            final float[] array = (float[]) value;
 
             for (int i = 0; i < array.length; i++) {
 
-                if (i != 0) out.write(',');
-                out.write(Float.valueOf(array[i]).toString());
+                if (i != 0) {
+                    out.write(',');
+                }
+                out.write(Float.toString(array[i]));
             }
         } else {
-            Object[] array = (Object[]) value;
+            final Object[] array = (Object[]) value;
 
             if (array.length != 0) {
 
-                Object arrValue = array[0];
+                final Object arrValue = array[0];
 
-                ObjectSerializer objectSerializer = SerializeConfig.globalInstance.getObjectWriter(arrValue.getClass());
-                if (objectSerializer == null) throw new RuntimeException("can not serializer object");
+                final ObjectSerializer objectSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(arrValue.getClass());
 
                 objectSerializer.write(serializer, arrValue);
 

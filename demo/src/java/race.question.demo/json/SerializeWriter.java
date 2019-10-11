@@ -5,11 +5,11 @@ package race.question.demo.json;
  */
 public class SerializeWriter {
 
-    private final static ThreadLocal<char[]> bufLocal = new ThreadLocal<>();
+    private final static ThreadLocal<char[]> BUF_LOCAL = new ThreadLocal<>();
 
-    private static int BUFFER_THRESHOLD = 1024 * 128;
+    private final static int BUFFER_THRESHOLD = 1024 * 128;
 
-    protected char buf[];
+    protected char[] buf;
 
     protected int count;
 
@@ -19,10 +19,10 @@ public class SerializeWriter {
 
         preSymbol = '{';
 
-        buf = bufLocal.get();
+        buf = BUF_LOCAL.get();
 
         if (buf != null) {
-            bufLocal.set(null);
+            BUF_LOCAL.set(null);
         } else {
             buf = new char[2048];
         }
@@ -71,9 +71,9 @@ public class SerializeWriter {
         System.arraycopy(buf, 0, newValue, 0, count);
 
         if (buf.length < BUFFER_THRESHOLD) {
-            char[] charsLocal = bufLocal.get();
+            char[] charsLocal = BUF_LOCAL.get();
             if (charsLocal == null || charsLocal.length < buf.length) {
-                bufLocal.set(buf);
+                BUF_LOCAL.set(buf);
             }
         }
 
@@ -83,7 +83,7 @@ public class SerializeWriter {
     public void close() {
 
         if (buf.length <= BUFFER_THRESHOLD) {
-            bufLocal.set(buf);
+            BUF_LOCAL.set(buf);
         }
 
         this.buf = null;
@@ -121,18 +121,18 @@ public class SerializeWriter {
 
     public void writeObject(String fieldName, Object value) throws Exception {
 
-        if (value == null) return;
+        if (value == null) {
+            return;
+        }
 
         // 原始类型
         Class<?> clazz = value.getClass();
 
         writePrefix(fieldName);
 
-        ObjectSerializer objectSerializer = SerializeConfig.globalInstance.getObjectWriter(clazz);
+        ObjectSerializer objectSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(clazz);
 
-        if (objectSerializer == null) throw new RuntimeException("can not serializer object");
-
-        JSONSerializer jsonSerializer = new JSONSerializer(this, SerializeConfig.globalInstance);
+        JSONSerializer jsonSerializer = new JSONSerializer(this, SerializeConfig.GLOBAL_INSTANCE);
         objectSerializer.write(jsonSerializer, value);
     }
 

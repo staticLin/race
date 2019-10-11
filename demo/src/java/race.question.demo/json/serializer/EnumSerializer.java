@@ -8,7 +8,7 @@ import race.question.demo.json.ObjectSerializer;
  */
 public class EnumSerializer implements ObjectSerializer {
 
-    public static final EnumSerializer instance = new EnumSerializer();
+    public static final EnumSerializer INSTANCE = new EnumSerializer();
 
     @Override
     public void write(JSONSerializer serializer, Object value) throws Exception {

@@ -13,7 +13,7 @@ import java.util.Iterator;
  */
 public class CollectionSerializer implements ObjectSerializer {
 
-    public static final CollectionSerializer instance = new CollectionSerializer();
+    public static final CollectionSerializer INSTANCE = new CollectionSerializer();
 
     @Override
     public void write(JSONSerializer serializer, Object object) throws Exception {
@@ -28,11 +28,11 @@ public class CollectionSerializer implements ObjectSerializer {
             Object element = iterator.next();
             Class eleClass = element.getClass();
 
-            ObjectSerializer objectSerializer = SerializeConfig.globalInstance.getObjectWriter(element.getClass());
-            if (objectSerializer == null) throw new RuntimeException("can not serializer object");
+            ObjectSerializer objectSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(element.getClass());
 
-            if (!plainValue(eleClass))
+            if (!plainValue(eleClass)) {
                 out.preSymbol = '{';
+            }
 
             objectSerializer.write(serializer, element);
 

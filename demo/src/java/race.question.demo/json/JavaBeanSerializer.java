@@ -5,14 +5,26 @@ package race.question.demo.json;
  */
 public class JavaBeanSerializer implements ObjectSerializer {
 
+    private SerializeBeanInfo beanInfo;
+
     public JavaBeanSerializer() {
     }
 
     public JavaBeanSerializer(SerializeBeanInfo beanInfo) {
+        this.beanInfo = beanInfo;
     }
 
     @Override
     public void write(JSONSerializer serializer, Object object) throws Exception {
-        throw new UnsupportedOperationException();
+
+        FieldInfo[] fields = beanInfo.fields;
+
+        serializer.out.preSymbol = '{';
+
+        for (FieldInfo getter : fields) {
+            Object value = getter.method.invoke(object);
+            serializer.out.writeObject(getter.fieldName, value);
+        }
+        serializer.out.end();
     }
 }

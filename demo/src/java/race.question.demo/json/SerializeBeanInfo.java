@@ -3,11 +3,10 @@ package race.question.demo.json;
 /**
  * @author linyh
  */
-public class SerializeBeanInfo {
+class SerializeBeanInfo {
 
-    public Class<?> beanType;
-    public FieldInfo[] fields;
-
+    Class<?> beanType;
+    FieldInfo[] fields;
 
     public Class<?> getBeanType() {
         return beanType;

@@ -9,7 +9,7 @@ import race.question.demo.json.SerializeWriter;
  */
 public class StringSerializer implements ObjectSerializer {
 
-    public static final StringSerializer instance = new StringSerializer();
+    public static final StringSerializer INSTANCE = new StringSerializer();
 
     @Override
     public void write(JSONSerializer serializer, Object object) throws Exception {

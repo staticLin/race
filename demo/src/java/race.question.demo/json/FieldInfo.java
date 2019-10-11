@@ -1,23 +1,21 @@
 package race.question.demo.json;
 
+import java.lang.reflect.Method;
+
 /**
  * @author linyh
  */
 public class FieldInfo {
-//    public Field field;
-//    public Method method;
-//    public Class<String> fieldClass;
 
-    public FieldInfo() {
-
-    }
-
-    public FieldInfo(String primitive, String returnType, String methodName, String fieldName) {
+    public FieldInfo(String primitive, String returnType, String methodName, String fieldName, Method method) {
         this.primitive = primitive;
         this.returnType = returnType;
         this.methodName = methodName;
         this.fieldName = fieldName;
+        this.method = method;
     }
+
+    public Method method;
 
     /**
      * char int long double float byte short boolean
@@ -41,29 +39,43 @@ public class FieldInfo {
      */
     public String fieldName;
 
+    public Method getMethod() {
+        return method;
+    }
+
+    public void setMethod(Method method) {
+        this.method = method;
+    }
+
+    public String getPrimitive() {
+        return primitive;
+    }
+
     public void setPrimitive(String primitive) {
         this.primitive = primitive;
     }
 
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
+    public String getReturnType() {
+        return returnType;
     }
 
     public void setReturnType(String returnType) {
         this.returnType = returnType;
     }
 
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
-    }
-
-    public String getMethodName() {
-        // getAge
-        return this.methodName;
-    }
-
-    public Object getFieldName() {
-        // age
-        return this.fieldName;
     }
 }
