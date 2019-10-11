@@ -39,8 +39,9 @@ public class NC {
         income.setProjectId(projectId);
 
         Zone zone = Zone.getZone(zoneName);
-        if (zone == null)
+        if (zone == null) {
             throw new RuntimeException("错误的执收区划名称");
+        }
 
         income.setDeliverZone(zone);
         income.setDeliverAmount(deliverAmount);
@@ -52,7 +53,9 @@ public class NC {
 
     public static Result deliver0(Income income) {
 
-        if (income == null) return null;
+        if (income == null) {
+            return null;
+        }
 
         Result res = new Result();
 

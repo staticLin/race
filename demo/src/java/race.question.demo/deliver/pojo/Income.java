@@ -37,8 +37,9 @@ public class Income {
     private BigDecimal amount;
 
     public boolean isZero() {
-        if (amount == null)
+        if (amount == null) {
             return true;
+        }
 
         return amount.compareTo(BigDecimal.ZERO) == 0;
     }

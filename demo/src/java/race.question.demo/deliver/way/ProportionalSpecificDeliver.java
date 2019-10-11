@@ -41,8 +41,9 @@ public class ProportionalSpecificDeliver implements DeliverWay {
 
         for (SpecificDeliverInfo info : infos) {
 
-            if (income.isZero())
+            if (income.isZero()) {
                 return;
+            }
 
             ratio = info.getRatio();
             amount = ratio.multiply(totalAmount);

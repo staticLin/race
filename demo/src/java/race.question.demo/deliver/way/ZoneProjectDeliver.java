@@ -52,7 +52,9 @@ public class ZoneProjectDeliver implements DeliverWay {
         // 有可能只有2 3个 例如 执收区划为福州时，只有3个
         for (int i = 0; i < zones.length; i++) {
 
-            if (income.isZero()) break;
+            if (income.isZero()) {
+                break;
+            }
 
             BigDecimal amount = totalAmount.multiply(ratio[i]);
 

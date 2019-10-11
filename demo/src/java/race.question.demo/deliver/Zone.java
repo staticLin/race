@@ -53,7 +53,7 @@ public enum Zone {
     private String name;
     private int deliverWayBit;
     private Zone[] zones;
-    private static final Map<String, Zone> zoneMap = new HashMap<>(16);
+    private static final Map<String, Zone> ZONE_MAP = new HashMap<>(16);
 
     Zone(String name) {
         this.name = name;
@@ -81,7 +81,7 @@ public enum Zone {
     }
 
     public static Zone getZone(String zoneName) {
-        return zoneMap.get(zoneName);
+        return ZONE_MAP.get(zoneName);
     }
 
     public static void initZoneMap() {
@@ -89,7 +89,7 @@ public enum Zone {
         Zone[] values = Zone.values();
 
         for (Zone value : values) {
-            zoneMap.put(value.getZoneName(), value);
+            ZONE_MAP.put(value.getZoneName(), value);
         }
     }
 }

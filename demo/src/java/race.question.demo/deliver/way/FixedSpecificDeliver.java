@@ -48,8 +48,9 @@ public class FixedSpecificDeliver implements DeliverWay {
 
         for (SpecificDeliverInfo info : infos) {
 
-            if (income.isZero())
+            if (income.isZero()) {
                 return;
+            }
 
             fixNum = info.getFixNum();
             amount = fixNum.multiply(deliverAmount);

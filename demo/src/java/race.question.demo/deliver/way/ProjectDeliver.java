@@ -72,7 +72,9 @@ public class ProjectDeliver implements DeliverWay {
         // 有可能只有3个分配 -> 中央 福建 福州
         for (int i = 0; i < zones.length; i++) {
 
-            if (income.isZero()) break;
+            if (income.isZero()) {
+                break;
+            }
 
             AmountUtils.calculateToOutcome(income, deliverAmount.multiply(ratio[i]), zones[i], res);
         }
