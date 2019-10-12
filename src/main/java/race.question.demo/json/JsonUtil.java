@@ -1,4 +1,4 @@
-package race.question.demo.json;
+package java.race.question.demo.json;
 
 /**
  * @author linyh
@@ -7,7 +7,7 @@ public class JsonUtil {
 
     public static String toJSONString(Object object) throws Exception {
 
-        SerializeWriter out = new SerializeWriter();
+        race.question.demo.json.SerializeWriter out = new SerializeWriter();
 
         try {
             JSONSerializer serializer = new JSONSerializer(out, SerializeConfig.GLOBAL_INSTANCE);
