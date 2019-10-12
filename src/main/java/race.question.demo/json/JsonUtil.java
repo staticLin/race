@@ -1,4 +1,4 @@
-package java.race.question.demo.json;
+package race.question.demo.json;
 
 /**
  * @author linyh
