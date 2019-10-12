@@ -4,7 +4,12 @@ import race.question.demo.deliver.pojo.Income;
 import race.question.demo.deliver.pojo.Result;
 import race.question.demo.deliver.pojo.SpecificDeliverInfo;
 import race.question.demo.deliver.pojo.ZoneProjectDeliverInfo;
-import race.question.demo.deliver.way.*;
+import race.question.demo.deliver.way.DeliverWay;
+import race.question.demo.deliver.way.FixedSpecificDeliver;
+import race.question.demo.deliver.way.NoDeliver;
+import race.question.demo.deliver.way.ProjectDeliver;
+import race.question.demo.deliver.way.ProportionalSpecificDeliver;
+import race.question.demo.deliver.way.ZoneProjectDeliver;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
