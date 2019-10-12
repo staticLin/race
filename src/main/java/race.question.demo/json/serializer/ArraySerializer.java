@@ -127,5 +127,6 @@ public class ArraySerializer implements ObjectSerializer {
             }
         }
         out.write(']');
+        out.preSymbol = ',';
     }
 }
