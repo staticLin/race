@@ -37,7 +37,7 @@ public class Test {
 
         user.setRoleMap(roleMap);
 
-        System.out.println(JSON.toJSONString(user));
+        System.out.println(JsonUtil.toJSONString(user));
         System.out.println(com.alibaba.fastjson.JSON.toJSONString(user));
 
         Gson gson = new Gson();
@@ -49,14 +49,14 @@ public class Test {
 
         System.out.println(jsonRootBean);
 
-        System.out.println(JSON.toJSONString(jsonRootBean));
+        System.out.println(JsonUtil.toJSONString(jsonRootBean));
         System.out.println(com.alibaba.fastjson.JSON.toJSONString(jsonRootBean));
         System.out.println(gson.toJson(jsonRootBean));
 
         Role role = new Role();
         role.setDate(new Date());
 
-        System.out.println(JSON.toJSONString(role));
+        System.out.println(JsonUtil.toJSONString(role));
         System.out.println(gson.toJson(role));
         System.out.println(com.alibaba.fastjson.JSON.toJSONString(role));
 
@@ -65,12 +65,12 @@ public class Test {
 //            com.alibaba.fastjson.JSON.toJSONString(user);
 //        }
 //        System.out.println("fastJson cost: " + (System.currentTimeMillis() - starttime1));
-//
-//        long starttime2 = System.currentTimeMillis();
-//        for (int i = 0; i < 1000000; i++) {
-//            JSON.toJSONString(user);
-//        }
-//        System.out.println("custom cost: " + (System.currentTimeMillis() - starttime2));
+////
+        long starttime2 = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            JsonUtil.toJSONString(user);
+        }
+        System.out.println("custom cost: " + (System.currentTimeMillis() - starttime2));
 
 //        asmSerializer.write(new JSONSerializer(new SerializeWriter(), SerializeConfig.globalInstance), user);
     }
