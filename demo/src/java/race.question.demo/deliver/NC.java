@@ -51,7 +51,7 @@ public class NC {
         return deliver0(income);
     }
 
-    public static Result deliver0(Income income) {
+    private static Result deliver0(Income income) {
 
         if (income == null) {
             return null;
@@ -93,7 +93,7 @@ public class NC {
         ZoneProjectDeliverInfo info2 = new ZoneProjectDeliverInfo();
 
         info1.setProjectId(1);
-        info1.setFixNum(new BigDecimal[]{new BigDecimal("1"),
+        info1.setFixNum(new BigDecimal[]{BigDecimal.ONE,
                 new BigDecimal("2"),
                 new BigDecimal("3"),
                 new BigDecimal("4")});

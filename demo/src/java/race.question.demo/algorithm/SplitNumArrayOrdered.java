@@ -5,49 +5,21 @@ package race.question.demo.algorithm;
  *
  * @author linyh
  */
-public class NewSplitNumArrayOrdered {
+public class SplitNumArrayOrdered {
 
-    public static int[] inputNumArray;
+    static int[] inputNumArray;
 
-    public static int[] minimumLastArray;
+    static int[] minimumLastArray;
 
-    public static int[] maximumFirstArray;
+    static int[] maximumFirstArray;
 
-    public static int size;
+    static int size;
 
     public static void main(String[] args) {
-
-//        inputNumArray = new int[501];
-//
-//        Scanner scanner = new Scanner(System.in);
-//
-//        String s = scanner.nextLine();
-//
-//        int init = 0;
-//        for (char c : s.toCharArray()) {
-//            inputNumArray[init] = c - '0';
-//            init++;
-//        }
-
-//        size = init;
-
-//        inputNumArray = new int[size];
-//        Random random = new Random();
-        int cost = 0;
-
-        StringBuilder sb = new StringBuilder();
-
-//        for (int x = 0; x < 1; x++) {
-
-//            for (int i = 0; i < size; i++) {
-//                inputNumArray[i] = random.nextInt(10);
-//            }
 
         inputNumArray = new int[]{1, 8, 9, 5, 1, 9, 1, 2, 1, 9, 5, 0};
 
         size = inputNumArray.length;
-
-        long start = System.currentTimeMillis();
 
         findMinimumLastIndex();
         findMaximumFirstIndex();
@@ -57,20 +29,18 @@ public class NewSplitNumArrayOrdered {
 
         while (index < size) {
 
-            if (flag) System.out.print(',');
+            if (flag) {
+                System.out.print(',');
+            }
 
             flag = true;
 
             for (int i = index; i <= maximumFirstArray[index]; i++) {
                 System.out.print(inputNumArray[i]);
-//                    sb.append(inputNumArray[i]);
             }
 
             index = maximumFirstArray[index] + 1;
         }
-        cost += System.currentTimeMillis() - start;
-//        }
-//        System.out.println("cost: " + cost);
     }
 
     public static void findMinimumLastIndex() {
@@ -122,20 +92,32 @@ public class NewSplitNumArrayOrdered {
     public static boolean compareSmallerOrNot(int leftStart, int leftEnd, int rightStart, int rightEnd) {
 
         // 遇到0就后移
-        while (leftStart <= leftEnd && inputNumArray[leftStart] == 0) leftStart++;
-        while (rightStart <= rightEnd && inputNumArray[rightStart] == 0) rightStart++;
+        while (leftStart <= leftEnd && inputNumArray[leftStart] == 0) {
+            leftStart++;
+        }
+        while (rightStart <= rightEnd && inputNumArray[rightStart] == 0) {
+            rightStart++;
+        }
 
-        if (leftStart > leftEnd || rightStart > rightEnd) return false;
+        if (leftStart > leftEnd || rightStart > rightEnd) {
+            return false;
+        }
 
         int leftLength = leftEnd - leftStart;
         int rightLength = rightEnd - rightStart;
 
-        if (leftLength > rightLength) return false;
-        else if (leftLength < rightLength) return true;
+        if (leftLength > rightLength) {
+            return false;
+        } else if (leftLength < rightLength) {
+            return true;
+        }
 
         for (int i = 0; i <= leftLength; i++) {
-            if (inputNumArray[leftStart + i] < inputNumArray[rightStart + i]) return true;
-            else if (inputNumArray[leftStart + i] > inputNumArray[rightStart + i]) return false;
+            if (inputNumArray[leftStart + i] < inputNumArray[rightStart + i]) {
+                return true;
+            } else if (inputNumArray[leftStart + i] > inputNumArray[rightStart + i]) {
+                return false;
+            }
         }
 
         return false;

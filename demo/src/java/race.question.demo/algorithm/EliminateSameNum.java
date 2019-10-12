@@ -37,6 +37,8 @@ public class EliminateSameNum {
     static int x;
     static int y;
 
+    static final int sameNum = 2;
+
     public static void eliminate(int[][] array, String direction) {
 
         if (array == null || array.length <= 0) {
@@ -122,12 +124,12 @@ public class EliminateSameNum {
                     lowIndex = j;
                 }
 
-                if (lowIndex != -1) {
-                    if (array[j][i] != 0) {
-                        array[i][lowIndex] = array[i][j];
-                        array[i][j] = 0;
-                        lowIndex--;
-                    }
+                if (lowIndex != -1 && array[j][i] != 0) {
+
+                    array[i][lowIndex] = array[i][j];
+                    array[i][j] = 0;
+                    lowIndex--;
+
                 }
 
                 j--;
@@ -152,12 +154,12 @@ public class EliminateSameNum {
                     lowIndex = j;
                 }
 
-                if (lowIndex != -1) {
-                    if (array[i][j] != 0) {
-                        array[i][lowIndex] = array[i][j];
-                        array[i][j] = 0;
-                        lowIndex++;
-                    }
+                if (lowIndex != -1 && array[i][j] != 0) {
+
+                    array[i][lowIndex] = array[i][j];
+                    array[i][j] = 0;
+                    lowIndex++;
+
                 }
 
                 j++;
@@ -181,12 +183,12 @@ public class EliminateSameNum {
                     lowIndex = j;
                 }
 
-                if (lowIndex != -1) {
-                    if (array[j][i] != 0) {
-                        array[lowIndex][i] = array[j][i];
-                        array[j][i] = 0;
-                        lowIndex--;
-                    }
+                if (lowIndex != -1 && array[j][i] != 0) {
+
+                    array[lowIndex][i] = array[j][i];
+                    array[j][i] = 0;
+                    lowIndex--;
+
                 }
 
                 j++;
@@ -210,12 +212,12 @@ public class EliminateSameNum {
                     lowIndex = j;
                 }
 
-                if (lowIndex != -1) {
-                    if (array[j][i] != 0) {
-                        array[lowIndex][i] = array[j][i];
-                        array[j][i] = 0;
-                        lowIndex--;
-                    }
+                if (lowIndex != -1 && array[j][i] != 0) {
+
+                    array[lowIndex][i] = array[j][i];
+                    array[j][i] = 0;
+                    lowIndex--;
+
                 }
 
                 j--;
@@ -251,9 +253,13 @@ public class EliminateSameNum {
             for (int j = 0; j < y; j++) {
 
                 // 处理过了
-                if (record[i][j] == round || array[i][j] == 0) continue;
+                if (record[i][j] == round || array[i][j] == 0) {
+                    continue;
+                }
 
-                if (detect(array, i, j, record, round)) hasSame = true;
+                if (detect(array, i, j, record, round)) {
+                    hasSame = true;
+                }
             }
         }
 
@@ -310,7 +316,7 @@ public class EliminateSameNum {
             expandLDown++;
         }
 
-        if (expandLeft + expandRight >= 2) {
+        if (expandLeft + expandRight >= sameNum) {
             hasSame = true;
             for (int k = 0; k <= expandRight; k++) {
                 record[i][j + k] = round;
@@ -320,7 +326,7 @@ public class EliminateSameNum {
             }
         }
 
-        if (expandUp + expandDown >= 2) {
+        if (expandUp + expandDown >= sameNum) {
             hasSame = true;
             for (int k = 0; k <= expandUp; k++) {
                 record[i - k][j] = round;
@@ -330,7 +336,7 @@ public class EliminateSameNum {
             }
         }
 
-        if (expandLUp + expandRDown >= 2) {
+        if (expandLUp + expandRDown >= sameNum) {
             hasSame = true;
             for (int k = 0; k <= expandLUp; k++) {
                 record[i - k][j - k] = round;
@@ -341,7 +347,7 @@ public class EliminateSameNum {
             }
         }
 
-        if (expandRUp + expandLDown >= 2) {
+        if (expandRUp + expandLDown >= sameNum) {
             hasSame = true;
             for (int k = 0; k <= expandRUp; k++) {
                 record[i - k][j + k] = round;
