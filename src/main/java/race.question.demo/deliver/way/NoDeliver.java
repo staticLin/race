@@ -21,7 +21,7 @@ public class NoDeliver implements DeliverWay {
      */
     @Override
     public void deliver(Income income, Result res) {
-        AmountUtils.calculateLeftToOutcome(income, income.getDeliverZone(), res);
+        AmountUtils.calculateLeftToOutcome(income, income.getDeliverZone().getZoneName(), res);
     }
 
     @Override

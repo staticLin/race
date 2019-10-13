@@ -5,7 +5,7 @@ package race.question.demo.algorithm;
  *
  * @author linyh
  */
-public class SplitNumArrayOrdered {
+public class SplitNumArrayOrderedUtils {
 
     static int[] inputNumArray;
 
@@ -15,7 +15,7 @@ public class SplitNumArrayOrdered {
 
     static int size;
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
 
         inputNumArray = new int[]{1, 8, 9, 5, 1, 9, 1, 2, 1, 9, 5, 0};
 
@@ -25,15 +25,12 @@ public class SplitNumArrayOrdered {
         findMaximumFirstIndex();
 
         int index = 0;
-        boolean flag = false;
 
         while (index < size) {
 
-            if (flag) {
+            if (index != 0) {
                 System.out.print(',');
             }
-
-            flag = true;
 
             for (int i = index; i <= maximumFirstArray[index]; i++) {
                 System.out.print(inputNumArray[i]);

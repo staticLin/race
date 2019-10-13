@@ -21,10 +21,10 @@ public class SerializeWriter {
 
         buf = BUF_LOCAL.get();
 
-        if (buf != null) {
-            BUF_LOCAL.set(null);
-        } else {
+        if (buf == null) {
             buf = new char[2048];
+        } else {
+            BUF_LOCAL.set(null);
         }
     }
 

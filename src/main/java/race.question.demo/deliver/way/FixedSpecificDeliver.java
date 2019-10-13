@@ -55,11 +55,11 @@ public class FixedSpecificDeliver implements DeliverWay {
             fixNum = info.getFixNum();
             amount = fixNum.multiply(deliverAmount);
 
-            AmountUtils.calculateToOutcome(income, amount, info.getToDeliverZone(), res);
+            AmountUtils.calculateToOutcome(income, amount, info.getToDeliverZone().getZoneName(), res);
         }
 
         // 余额归执行区划
-        AmountUtils.calculateLeftToOutcome(income, income.getDeliverZone(), res);
+        AmountUtils.calculateLeftToOutcome(income, income.getDeliverZone().getZoneName(), res);
     }
 
     @Override

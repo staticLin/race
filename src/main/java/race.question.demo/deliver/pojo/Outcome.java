@@ -11,15 +11,15 @@ import java.math.BigDecimal;
  */
 public class Outcome {
 
-    public Outcome(Zone zone, BigDecimal amount) {
-        this.zone = zone;
+    public Outcome(String zoneName, BigDecimal amount) {
+        this.zoneName = zoneName;
         this.amount = amount.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
     }
 
     /**
      * 收入区划
      */
-    private Zone zone;
+    private String zoneName;
 
     /**
      * 分入金额
@@ -29,7 +29,7 @@ public class Outcome {
     @Override
     public String toString() {
         return "资金分解: {" +
-                "区划=" + zone.getZoneName() +
+                "区划=" + zoneName +
                 ", 分得金额=" + amount +
                 '}';
     }

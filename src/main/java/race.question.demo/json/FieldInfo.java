@@ -7,14 +7,9 @@ import java.lang.reflect.Method;
  */
 public class FieldInfo {
 
-    public FieldInfo(String primitive, String returnType, String methodName, String fieldName, Method method) {
-        this.primitive = primitive;
-        this.returnType = returnType;
-        this.methodName = methodName;
-        this.fieldName = fieldName;
-        this.method = method;
-    }
-
+    /**
+     * 方法对象
+     */
     public Method method;
 
     /**
@@ -39,11 +34,32 @@ public class FieldInfo {
      */
     public String fieldName;
 
+    /**
+     * 序列化元信息
+     * @param primitive
+     * @param returnType
+     * @param methodName
+     * @param fieldName
+     * @param method
+     */
+    public FieldInfo(final String primitive,
+                     final String returnType,
+                     final String methodName,
+                     final String fieldName,
+                     final Method method) {
+
+        this.primitive = primitive;
+        this.returnType = returnType;
+        this.methodName = methodName;
+        this.fieldName = fieldName;
+        this.method = method;
+    }
+
     public Method getMethod() {
         return method;
     }
 
-    public void setMethod(Method method) {
+    public void setMethod(final Method method) {
         this.method = method;
     }
 
@@ -51,7 +67,7 @@ public class FieldInfo {
         return primitive;
     }
 
-    public void setPrimitive(String primitive) {
+    public void setPrimitive(final String primitive) {
         this.primitive = primitive;
     }
 
@@ -59,7 +75,7 @@ public class FieldInfo {
         return returnType;
     }
 
-    public void setReturnType(String returnType) {
+    public void setReturnType(final String returnType) {
         this.returnType = returnType;
     }
 
@@ -67,7 +83,7 @@ public class FieldInfo {
         return methodName;
     }
 
-    public void setMethodName(String methodName) {
+    public void setMethodName(final String methodName) {
         this.methodName = methodName;
     }
 
@@ -75,7 +91,7 @@ public class FieldInfo {
         return fieldName;
     }
 
-    public void setFieldName(String fieldName) {
+    public void setFieldName(final String fieldName) {
         this.fieldName = fieldName;
     }
 }

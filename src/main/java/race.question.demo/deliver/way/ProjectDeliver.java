@@ -67,7 +67,7 @@ public class ProjectDeliver implements DeliverWay {
             deliverAmount = income.getAmount();
         }
 
-        Zone[] zones = income.getDeliverZone().getZones();
+        String[] zones = income.getDeliverZone().zones;
 
         // 有可能只有3个分配 -> 中央 福建 福州
         for (int i = 0; i < zones.length; i++) {
@@ -81,7 +81,7 @@ public class ProjectDeliver implements DeliverWay {
 
         // 余额划分
         Zone zone = info.isLeftToOwn() ? income.getDeliverZone() : Zone.CENTRAL;
-        AmountUtils.calculateLeftToOutcome(income, zone, res);
+        AmountUtils.calculateLeftToOutcome(income, zone.getZoneName(), res);
     }
 
     @Override

@@ -13,51 +13,52 @@ public enum Zone {
     /**
      * 中央
      */
-    CENTRAL("中央"),
+    CENTRAL("中央", new String[]{"中央"}),
 
     /**
      * 福建省
      */
-    FUJIAN("福建省"),
+    FUJIAN("福建省", new String[]{"中央", "福建省"}),
 
     /**
      * 福州市
      */
-    FUZHOU("福州市"),
+    FUZHOU("福州市", new String[]{"中央", "福建省", "福州市"}),
 
     /**
      * 鼓楼
      */
-    GULOU("鼓楼区"),
+    GULOU("鼓楼区", new String[]{"中央", "福建省", "福州市", "鼓楼区"}),
 
     /**
      * 仓山
      */
-    CANGSHAN("仓山区"),
+    CANGSHAN("仓山区", new String[]{"中央", "福建省", "福州市", "仓山区"}),
 
     /**
      * 泉州
      */
-    QUANZHOU("泉州市"),
+    QUANZHOU("泉州市", new String[]{"中央", "福建省", "泉州市"}),
 
     /**
      * 晋江
      */
-    JINJIANG("晋江市"),
+    JINJIANG("晋江市", new String[]{"中央", "福建省", "泉州市", "晋江市"}),
 
     /**
      * 安溪
      */
-    ANXI("安溪县");
+    ANXI("安溪县", new String[]{"中央", "福建省", "泉州市", "安溪县"});
 
     private String name;
     private int deliverWayBit;
-    private Zone[] zones;
-    private static final Map<String, Zone> ZONE_MAP = new HashMap<>(16);
+    public final String[] zones;
+    private static final Map<String, Zone> ZONE_MAP = new HashMap<>();
 
-    Zone(String name) {
+    Zone(String name, String[] zones) {
         this.name = name;
         this.deliverWayBit = 0;
+        this.zones = zones;
     }
 
     public String getZoneName() {
@@ -70,14 +71,6 @@ public enum Zone {
 
     public boolean isDeliver(int bit) {
         return (deliverWayBit & bit) != 0;
-    }
-
-    public void setZones(Zone[] zones) {
-        this.zones = zones;
-    }
-
-    public Zone[] getZones() {
-        return zones;
     }
 
     public static Zone getZone(String zoneName) {

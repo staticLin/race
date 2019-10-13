@@ -3,14 +3,24 @@ package race.question.demo.json;
 /**
  * @author linyh
  */
-public class JsonUtil {
+public final class JsonUtil {
 
-    public static String toJSONString(Object object) throws Exception {
+    private JsonUtil(){
 
-        race.question.demo.json.SerializeWriter out = new SerializeWriter();
+    }
+
+    /**
+     * 序列化对象为Json字符串
+     * @param object
+     * @return
+     * @throws Exception
+     */
+    public static String toJSONString(final Object object) throws Exception {
+
+        final SerializeWriter out = new SerializeWriter();
 
         try {
-            JSONSerializer serializer = new JSONSerializer(out, SerializeConfig.GLOBAL_INSTANCE);
+            final JSONSerializer serializer = new JSONSerializer(out, SerializeConfig.GLOBAL_INSTANCE);
 
             serializer.write(object);
 

@@ -26,10 +26,12 @@ public class Test {
         user.setC(3);
         user.setD(4);
         user.setE(true);
-        user.setF('c');
+//        user.setF('c');
+//        user.setCharArray(new char[]{});
         user.setG(12.1F);
-        user.setArray(new byte[]{1, 2, 3});
+//        user.setArray(new byte[]{1, 2, 3});
         user.setEnumTest(EnumTest.ONE);
+//        user.setIntarray(new int[]{4,5,6});
 
         Map<String, Role> roleMap = new HashMap<>();
         roleMap.put("a", new Role(2, "aAdmin"));

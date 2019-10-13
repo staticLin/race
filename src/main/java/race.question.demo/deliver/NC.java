@@ -81,18 +81,6 @@ public class NC {
      */
     private static void initDeliverRule() {
 
-        Zone.ANXI.setZones(new Zone[]{Zone.CENTRAL, Zone.FUJIAN, Zone.QUANZHOU, Zone.ANXI});
-        Zone.CANGSHAN.setZones(new Zone[]{Zone.CENTRAL, Zone.FUJIAN, Zone.FUZHOU, Zone.CANGSHAN});
-        Zone.JINJIANG.setZones(new Zone[]{Zone.CENTRAL, Zone.FUJIAN, Zone.QUANZHOU, Zone.JINJIANG});
-        Zone.GULOU.setZones(new Zone[]{Zone.CENTRAL, Zone.FUJIAN, Zone.FUZHOU, Zone.GULOU});
-
-        Zone.QUANZHOU.setZones(new Zone[]{Zone.CENTRAL, Zone.FUJIAN, Zone.QUANZHOU});
-        Zone.FUZHOU.setZones(new Zone[]{Zone.CENTRAL, Zone.FUJIAN, Zone.FUZHOU});
-
-        Zone.FUJIAN.setZones(new Zone[]{Zone.CENTRAL, Zone.FUJIAN});
-
-        Zone.CENTRAL.setZones(new Zone[]{Zone.CENTRAL});
-
         // 项目分成
         ZoneProjectDeliverInfo info1 = new ZoneProjectDeliverInfo();
         ZoneProjectDeliverInfo info2 = new ZoneProjectDeliverInfo();

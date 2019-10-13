@@ -22,7 +22,7 @@ import static jdk.internal.org.objectweb.asm.Opcodes.*;
  */
 public class SerializeConfig {
 
-    private final AtomicLong seed = new AtomicLong();
+    private final transient AtomicLong seed = new AtomicLong();
 
     public final static SerializeConfig GLOBAL_INSTANCE = new SerializeConfig();
 
@@ -80,21 +80,23 @@ public class SerializeConfig {
 
     public ObjectSerializer getObjectWriter(Class<?> clazz) {
 
+        ObjectSerializer writer;
+
         if (clazz.isEnum()) {
-            return get(Enum.class);
+            writer = get(Enum.class);
         } else if (Map.class.isAssignableFrom(clazz)) {
-            return get(Map.class);
+            writer = get(Map.class);
         } else if (isPrimitive(clazz)) {
-            return get(String.class);
+            writer = get(String.class);
         } else if (Collection.class.isAssignableFrom(clazz)) {
-            return get(Collection.class);
-        }
+            writer = get(Collection.class);
+        } else {
+            writer = get(clazz);
 
-        ObjectSerializer writer = get(clazz);
-
-        if (writer == null) {
-            writer = createJavaBeanSerializer(buildBeanInfo(clazz));
-            put(clazz, writer);
+            if (writer == null) {
+                writer = createJavaBeanSerializer(buildBeanInfo(clazz));
+                put(clazz, writer);
+            }
         }
 
         return writer;
@@ -184,16 +186,20 @@ public class SerializeConfig {
 
     public ObjectSerializer createJavaBeanSerializer(SerializeBeanInfo beanInfo) {
 
+        ObjectSerializer asmSerializer;
+
         try {
-            ObjectSerializer asmSerializer = createASMSerializer(beanInfo);
-            if (asmSerializer != null) {
-                return asmSerializer;
-            }
+            asmSerializer = createASMSerializer(beanInfo);
+
         } catch (Exception ignore) {
-            // ignore
+            asmSerializer = new JavaBeanSerializer(beanInfo);
         }
 
-        return new JavaBeanSerializer(beanInfo);
+        if (asmSerializer == null) {
+            asmSerializer = new JavaBeanSerializer(beanInfo);
+        }
+
+        return asmSerializer;
     }
 
     public JavaBeanSerializer createASMSerializer(SerializeBeanInfo beanInfo) throws Exception {
@@ -303,28 +309,29 @@ public class SerializeConfig {
 
         byte[] code = cw.toByteArray();
 
-        ASMClassLoader classLoader = ASMClassLoader.INSTANCE;
+        AsmClassLoader classLoader = AsmClassLoader.INSTANCE;
         Class<?> serializerClass = classLoader.defineClassPublic(defineClassName, code, 0, code.length);
 
         Constructor<?> constructor = serializerClass.getConstructor();
-        Object instance = constructor.newInstance();
 
-        return (JavaBeanSerializer) instance;
+        return (JavaBeanSerializer) constructor.newInstance();
     }
 
-    public static class ASMClassLoader extends ClassLoader {
+    public static class AsmClassLoader extends ClassLoader {
 
-        private static final ASMClassLoader INSTANCE = AccessController.doPrivileged(
-                (PrivilegedAction<ASMClassLoader>) ASMClassLoader::new);
+        private static final AsmClassLoader INSTANCE = AccessController.doPrivileged(
+                (PrivilegedAction<AsmClassLoader>) AsmClassLoader::new);
 
-        public ASMClassLoader() {
+        public AsmClassLoader() {
             super(getParentClassLoader());
         }
 
         private static ClassLoader getParentClassLoader() {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-            if (classLoader == null) classLoader = JsonUtil.class.getClassLoader();
+            if (classLoader == null) {
+                classLoader = JsonUtil.class.getClassLoader();
+            }
 
             return classLoader;
         }

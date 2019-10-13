@@ -5,22 +5,40 @@ package race.question.demo.json;
  */
 public class JSONSerializer {
 
-    public final SerializeWriter out;
-    protected final SerializeConfig config;
+    /**
+     * StringBuilder
+     */
+    public final transient SerializeWriter out;
 
-    public JSONSerializer(SerializeWriter out, SerializeConfig config) {
+    /**
+     * 配置属性类
+     */
+    protected final transient SerializeConfig config;
+
+    /**
+     * 初始化一个StringBuilder
+     * @param out
+     * @param config
+     */
+    public JSONSerializer(final SerializeWriter out, final SerializeConfig config) {
         this.out = out;
         this.config = config;
     }
 
-    public void write(Object object) throws Exception {
+    /**
+     * 写一个对象到StringBuilder
+     * @param object
+     * @throws Exception
+     */
+    public void write(final Object object) throws Exception {
+
         if (object == null) {
             out.writeNull();
             return;
         }
 
-        Class<?> clazz = object.getClass();
-        ObjectSerializer writer = config.getObjectWriter(clazz);
+        final Class<?> clazz = object.getClass();
+        final ObjectSerializer writer = config.getObjectWriter(clazz);
 
         writer.write(this, object);
     }

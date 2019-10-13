@@ -27,8 +27,33 @@ public class User {
     private boolean e;
     private char f;
     private float g;
-
+    private char[] charArray;
     private byte[] array;
+    private int[] intarray;
+
+    public char[] getCharArray() {
+        return charArray;
+    }
+
+    public void setCharArray(char[] charArray) {
+        this.charArray = charArray;
+    }
+
+    public Boolean getTest() {
+        return test;
+    }
+
+    public void setTest(Boolean test) {
+        this.test = test;
+    }
+
+    public int[] getIntarray() {
+        return intarray;
+    }
+
+    public void setIntarray(int[] intarray) {
+        this.intarray = intarray;
+    }
 
     public byte[] getArray() {
         return array;

@@ -45,7 +45,7 @@ public class ZoneProjectDeliver implements DeliverWay {
         // 比例计算
         BigDecimal[] ratio = info.getRatio();
 
-        Zone[] zones = income.getDeliverZone().getZones();
+        String[] zones = income.getDeliverZone().zones;
 
         BigDecimal totalAmount = income.getAmount();
 
@@ -63,7 +63,7 @@ public class ZoneProjectDeliver implements DeliverWay {
 
         // 余额划分
         Zone zone = info.isLeftToOwn() ? income.getDeliverZone() : Zone.CENTRAL;
-        AmountUtils.calculateLeftToOutcome(income, zone, res);
+        AmountUtils.calculateLeftToOutcome(income, zone.getZoneName(), res);
     }
 
     @Override
