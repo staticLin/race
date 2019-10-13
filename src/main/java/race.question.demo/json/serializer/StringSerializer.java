@@ -7,32 +7,39 @@ import race.question.demo.json.SerializeWriter;
 /**
  * @author linyh
  */
-public class StringSerializer implements ObjectSerializer {
+public final class StringSerializer implements ObjectSerializer {
 
+    /**
+     * 单例
+     */
     public static final StringSerializer INSTANCE = new StringSerializer();
 
-    @Override
-    public void write(JSONSerializer serializer, Object object) throws Exception {
+    private StringSerializer() {
+    }
 
-        SerializeWriter out = serializer.out;
+    @Override
+    public void write(final JSONSerializer serializer, final Object object) throws Exception {
+
+        final SerializeWriter out = serializer.out;
 
         if (object instanceof Number || object instanceof Boolean) {
 
             out.writeFieldWithoutDoubleQuote(object.toString());
-            return;
-        }
 
-        if (object instanceof Character) {
-            char c = (Character) object;
-            if (c == 0) {
+        } else if (object instanceof Character) {
+
+            final char charValue = (Character) object;
+
+            if (charValue == 0) {
                 out.writeDoubleQuote("\\u0000");
             } else {
-                out.write(c);
+                out.write(charValue);
             }
-            out.preSymbol = ',';
-            return;
-        }
 
-        out.writeFieldValueStringWithDoubleQuote(object.toString());
+            out.preSymbol = ',';
+        } else {
+
+            out.writeFieldValueStringWithDoubleQuote(object.toString());
+        }
     }
 }

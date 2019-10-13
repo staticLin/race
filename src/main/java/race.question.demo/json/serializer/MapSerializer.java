@@ -5,47 +5,52 @@ import race.question.demo.json.ObjectSerializer;
 import race.question.demo.json.SerializeConfig;
 import race.question.demo.json.SerializeWriter;
 
-import java.util.Iterator;
 import java.util.Map;
 
 /**
  * @author linyh
  */
-public class MapSerializer implements ObjectSerializer {
+public final class MapSerializer implements ObjectSerializer {
 
+    /**
+     * 单例
+     */
     public static final MapSerializer INSTANCE = new MapSerializer();
 
-    @Override
-    public void write(JSONSerializer serializer, Object value) throws Exception {
+    private MapSerializer() {
+    }
 
-        Map<?, ?> map = (Map<?, ?>) value;
-        SerializeWriter out = serializer.out;
+    @Override
+    public void write(final JSONSerializer serializer, final Object value) throws Exception {
+
+        final Map<?, ?> map = (Map<?, ?>) value;
+        final SerializeWriter out = serializer.out;
 
         out.write('{');
-
-        if (map.size() > 0) {
+        boolean flag = false;
+        if (!map.isEmpty()) {
 
             ObjectSerializer keySerializer = null;
             ObjectSerializer valueSerializer = null;
 
-            Iterator<? extends Map.Entry<?, ?>> iterator = map.entrySet().iterator();
-            Map.Entry<?, ?> next = iterator.next();
-            Object k = next.getKey();
-            Object v = next.getValue();
+            for (final Map.Entry<?, ?> entry : map.entrySet()) {
 
-            writeKeyAndValue(keySerializer, k, valueSerializer, v, serializer);
+                if (flag) {
+                    out.write(',');
+                }
+                flag = true;
 
-            out.preSymbol = ',';
+                final Object key = entry.getKey();
+                final Object writeValue = entry.getValue();
 
-            while (iterator.hasNext()) {
+                if (key != null && keySerializer == null) {
+                    keySerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(key.getClass());
+                }
+                if (writeValue != null && valueSerializer == null) {
+                    valueSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(writeValue.getClass());
+                }
 
-                out.write(',');
-                next = iterator.next();
-
-                k = next.getKey();
-                v = next.getValue();
-
-                writeKeyAndValue(keySerializer, k, valueSerializer, v, serializer);
+                writeKeyAndValue(keySerializer, key, valueSerializer, writeValue, serializer);
             }
         }
 
@@ -55,26 +60,24 @@ public class MapSerializer implements ObjectSerializer {
     }
 
     private void writeKeyAndValue
-            (ObjectSerializer keySerializer,
-             Object k,
-             ObjectSerializer valueSerializer,
-             Object v, JSONSerializer serializer) throws Exception {
+            (final ObjectSerializer keySerializer,
+             final Object key,
+             final ObjectSerializer valueSerializer,
+             final Object value, final JSONSerializer serializer) throws Exception {
 
-        write0(keySerializer, k, serializer);
+        write0(keySerializer, key, serializer);
         serializer.out.write(':');
-        write0(valueSerializer, v, serializer);
+        write0(valueSerializer, value, serializer);
     }
 
-    private void write0(ObjectSerializer valueSerializer, Object v, JSONSerializer serializer) throws Exception {
+    private void write0(final ObjectSerializer valueSerializer,
+                        final Object value,
+                        final JSONSerializer serializer) throws Exception {
 
-        if (v == null) {
+        if (value == null) {
             serializer.out.writeNull();
         } else {
-            if (valueSerializer == null) {
-                valueSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(v.getClass());
-            }
-
-            valueSerializer.write(serializer, v);
+            valueSerializer.write(serializer, value);
         }
     }
 }
