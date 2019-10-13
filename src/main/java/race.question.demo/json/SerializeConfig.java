@@ -28,7 +28,6 @@ public class SerializeConfig {
 
     private final Map<Class, ObjectSerializer> mixInSerializers;
     private final String javaBeanSerializer;
-//    private final String jsonSerializer;
     private final String classPath;
     private final String serializeWriter;
     private final String packageName;
@@ -41,7 +40,6 @@ public class SerializeConfig {
         classPath = packageName.replace('.', '/') + "/";
 
         javaBeanSerializer = classPath + "JavaBeanSerializer";
-//        jsonSerializer = classPath + "JSONSerializer";
         serializeWriter = classPath + "SerializeWriter";
 
         this.mixInSerializers = new HashMap<>();
