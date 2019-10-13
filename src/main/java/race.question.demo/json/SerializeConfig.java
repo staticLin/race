@@ -28,7 +28,7 @@ public class SerializeConfig {
 
     private final Map<Class, ObjectSerializer> mixInSerializers;
     private final String javaBeanSerializer;
-    private final String jsonSerializer;
+//    private final String jsonSerializer;
     private final String classPath;
     private final String serializeWriter;
     private final String packageName;
@@ -41,7 +41,7 @@ public class SerializeConfig {
         classPath = packageName.replace('.', '/') + "/";
 
         javaBeanSerializer = classPath + "JavaBeanSerializer";
-        jsonSerializer = classPath + "JSONSerializer";
+//        jsonSerializer = classPath + "JSONSerializer";
         serializeWriter = classPath + "SerializeWriter";
 
         this.mixInSerializers = new HashMap<>();
@@ -230,29 +230,25 @@ public class SerializeConfig {
         }
 
         {
-            mv = cw.visitMethod(ACC_PUBLIC, "write", "(L" + jsonSerializer + ";Ljava/lang/Object;)V", null, new String[]{"java/lang/Exception"});
+            mv = cw.visitMethod(ACC_PUBLIC, "write", "(L" + serializeWriter + ";Ljava/lang/Object;)V", null, new String[]{"java/lang/Exception"});
             mv.visitCode();
 
             mv.visitVarInsn(ALOAD, 1);
-            mv.visitFieldInsn(GETFIELD, jsonSerializer, "out", "L" + serializeWriter + ";");
-            mv.visitVarInsn(ASTORE, 3);
-
-            mv.visitVarInsn(ALOAD, 3);
             mv.visitIntInsn(BIPUSH, 123);
             mv.visitFieldInsn(PUTFIELD, serializeWriter, "preSymbol", "C");
 
             mv.visitVarInsn(ALOAD, 2);
             mv.visitTypeInsn(CHECKCAST, jsonObjectClassName);
-            mv.visitVarInsn(ASTORE, 4);
+            mv.visitVarInsn(ASTORE, 3);
 
-            int index = 6;
+            int index = 5;
 
             for (FieldInfo getter : getters) {
 
                 mv.visitLdcInsn(getter.fieldName);
-                mv.visitVarInsn(ASTORE, 5);
+                mv.visitVarInsn(ASTORE, 4);
 
-                mv.visitVarInsn(ALOAD, 4);
+                mv.visitVarInsn(ALOAD, 3);
                 switch (getter.primitive) {
                     case "int":
                         mv.visitMethodInsn(INVOKEVIRTUAL, jsonObjectClassName, getter.methodName, "()I", false);
@@ -293,12 +289,12 @@ public class SerializeConfig {
 
                 mv.visitVarInsn(ASTORE, index);
 
-                mv.visitVarInsn(ALOAD, 3);
-                mv.visitVarInsn(ALOAD, 5);
+                mv.visitVarInsn(ALOAD, 1);
+                mv.visitVarInsn(ALOAD, 4);
                 mv.visitVarInsn(ALOAD, index++);
                 mv.visitMethodInsn(INVOKEVIRTUAL, serializeWriter, "writeObject", "(Ljava/lang/String;Ljava/lang/Object;)V", false);
             }
-            mv.visitVarInsn(ALOAD, 3);
+            mv.visitVarInsn(ALOAD, 1);
             mv.visitMethodInsn(INVOKEVIRTUAL, serializeWriter, "end", "()V", false);
             mv.visitInsn(RETURN);
 

@@ -1,6 +1,5 @@
 package race.question.demo.json.serializer;
 
-import race.question.demo.json.JSONSerializer;
 import race.question.demo.json.ObjectSerializer;
 import race.question.demo.json.SerializeConfig;
 import race.question.demo.json.SerializeWriter;
@@ -22,10 +21,9 @@ public final class CollectionSerializer implements ObjectSerializer {
     }
 
     @Override
-    public void write(final JSONSerializer serializer, final Object object) throws Exception {
+    public void write(final SerializeWriter out, final Object object) throws Exception {
 
         final Collection list = (Collection) object;
-        final SerializeWriter out = serializer.out;
 
         out.write('[');
         if (!list.isEmpty()) {
@@ -40,11 +38,11 @@ public final class CollectionSerializer implements ObjectSerializer {
                 out.preSymbol = '{';
             }
 
-            objectSerializer.write(serializer, element);
+            objectSerializer.write(out, element);
 
             while (iterator.hasNext()) {
                 out.write(',');
-                objectSerializer.write(serializer, iterator.next());
+                objectSerializer.write(out, iterator.next());
             }
         }
         out.write(']');

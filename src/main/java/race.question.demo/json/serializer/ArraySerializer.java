@@ -1,6 +1,5 @@
 package race.question.demo.json.serializer;
 
-import race.question.demo.json.JSONSerializer;
 import race.question.demo.json.ObjectSerializer;
 import race.question.demo.json.SerializeConfig;
 import race.question.demo.json.SerializeWriter;
@@ -20,14 +19,14 @@ public final class ArraySerializer implements ObjectSerializer {
 
     /**
      * 数组的序列化方式
-     * @param serializer
+     *
+     * @param out
      * @param value
      * @throws Exception
      */
     @Override
-    public void write(final JSONSerializer serializer, final Object value) throws Exception {
+    public void write(final SerializeWriter out, final Object value) throws Exception {
 
-        final SerializeWriter out = serializer.out;
         out.write('[');
 
         if (value instanceof int[]) {
@@ -127,11 +126,11 @@ public final class ArraySerializer implements ObjectSerializer {
 
                 final ObjectSerializer objectSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(arrValue.getClass());
 
-                objectSerializer.write(serializer, arrValue);
+                objectSerializer.write(out, arrValue);
 
                 for (int i = 1; i < array.length; i++) {
                     out.write(',');
-                    objectSerializer.write(serializer, array[i]);
+                    objectSerializer.write(out, array[i]);
                 }
             }
         }

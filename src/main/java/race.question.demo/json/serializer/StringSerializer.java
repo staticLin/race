@@ -1,6 +1,5 @@
 package race.question.demo.json.serializer;
 
-import race.question.demo.json.JSONSerializer;
 import race.question.demo.json.ObjectSerializer;
 import race.question.demo.json.SerializeWriter;
 
@@ -18,9 +17,7 @@ public final class StringSerializer implements ObjectSerializer {
     }
 
     @Override
-    public void write(final JSONSerializer serializer, final Object object) throws Exception {
-
-        final SerializeWriter out = serializer.out;
+    public void write(final SerializeWriter out, final Object object) throws Exception {
 
         if (object instanceof Number || object instanceof Boolean) {
 

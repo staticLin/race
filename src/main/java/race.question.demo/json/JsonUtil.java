@@ -5,12 +5,13 @@ package race.question.demo.json;
  */
 public final class JsonUtil {
 
-    private JsonUtil(){
+    private JsonUtil() {
 
     }
 
     /**
      * 序列化对象为Json字符串
+     *
      * @param object
      * @return
      * @throws Exception
@@ -20,9 +21,15 @@ public final class JsonUtil {
         final SerializeWriter out = new SerializeWriter();
 
         try {
-            final JSONSerializer serializer = new JSONSerializer(out, SerializeConfig.GLOBAL_INSTANCE);
 
-            serializer.write(object);
+            if (object == null) {
+                out.writeNull();
+            } else {
+                final Class<?> clazz = object.getClass();
+                final ObjectSerializer serializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(clazz);
+
+                serializer.write(out, object);
+            }
 
             return out.toString();
         } finally {

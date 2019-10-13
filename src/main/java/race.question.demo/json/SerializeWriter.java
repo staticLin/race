@@ -132,8 +132,7 @@ public class SerializeWriter {
 
         ObjectSerializer objectSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(clazz);
 
-        JSONSerializer jsonSerializer = new JSONSerializer(this, SerializeConfig.GLOBAL_INSTANCE);
-        objectSerializer.write(jsonSerializer, value);
+        objectSerializer.write(this, value);
     }
 
     public void end() {

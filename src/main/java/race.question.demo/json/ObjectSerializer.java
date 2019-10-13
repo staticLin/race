@@ -7,9 +7,9 @@ public interface ObjectSerializer {
 
     /**
      * 序列化操作
-     * @param serializer
+     * @param writer
      * @param object
      * @throws Exception
      */
-    void write(JSONSerializer serializer, Object object) throws Exception;
+    void write(SerializeWriter writer, Object object) throws Exception;
 }

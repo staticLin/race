@@ -1,7 +1,7 @@
 package race.question.demo.json.serializer;
 
-import race.question.demo.json.JSONSerializer;
 import race.question.demo.json.ObjectSerializer;
+import race.question.demo.json.SerializeWriter;
 
 /**
  * @author linyh
@@ -17,9 +17,9 @@ public final class EnumSerializer implements ObjectSerializer {
     }
 
     @Override
-    public void write(final JSONSerializer serializer, final Object value) throws Exception {
+    public void write(final SerializeWriter out, final Object value) throws Exception {
 
         final Enum enumValue = (Enum) value;
-        serializer.out.writeFieldValueStringWithDoubleQuote(enumValue.name());
+        out.writeFieldValueStringWithDoubleQuote(enumValue.name());
     }
 }

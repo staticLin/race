@@ -1,6 +1,5 @@
 package race.question.demo.json.serializer;
 
-import race.question.demo.json.JSONSerializer;
 import race.question.demo.json.ObjectSerializer;
 import race.question.demo.json.SerializeConfig;
 import race.question.demo.json.SerializeWriter;
@@ -21,10 +20,9 @@ public final class MapSerializer implements ObjectSerializer {
     }
 
     @Override
-    public void write(final JSONSerializer serializer, final Object value) throws Exception {
+    public void write(final SerializeWriter out, final Object value) throws Exception {
 
         final Map<?, ?> map = (Map<?, ?>) value;
-        final SerializeWriter out = serializer.out;
 
         out.write('{');
         boolean flag = false;
@@ -50,7 +48,7 @@ public final class MapSerializer implements ObjectSerializer {
                     valueSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(writeValue.getClass());
                 }
 
-                writeKeyAndValue(keySerializer, key, valueSerializer, writeValue, serializer);
+                writeKeyAndValue(keySerializer, key, valueSerializer, writeValue, out);
             }
         }
 
@@ -63,21 +61,21 @@ public final class MapSerializer implements ObjectSerializer {
             (final ObjectSerializer keySerializer,
              final Object key,
              final ObjectSerializer valueSerializer,
-             final Object value, final JSONSerializer serializer) throws Exception {
+             final Object value, final SerializeWriter out) throws Exception {
 
-        write0(keySerializer, key, serializer);
-        serializer.out.write(':');
-        write0(valueSerializer, value, serializer);
+        write0(keySerializer, key, out);
+        out.write(':');
+        write0(valueSerializer, value, out);
     }
 
     private void write0(final ObjectSerializer valueSerializer,
                         final Object value,
-                        final JSONSerializer serializer) throws Exception {
+                        final SerializeWriter out) throws Exception {
 
         if (value == null) {
-            serializer.out.writeNull();
+            out.writeNull();
         } else {
-            valueSerializer.write(serializer, value);
+            valueSerializer.write(out, value);
         }
     }
 }

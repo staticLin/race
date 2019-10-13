@@ -28,16 +28,16 @@ public class JavaBeanSerializer implements ObjectSerializer {
     }
 
     @Override
-    public void write(final JSONSerializer serializer, final Object object) throws Exception {
+    public void write(final SerializeWriter out, final Object object) throws Exception {
 
         final FieldInfo[] fields = beanInfo.fields;
 
-        serializer.out.preSymbol = '{';
+        out.preSymbol = '{';
 
         for (final FieldInfo getter : fields) {
             final Object value = getter.method.invoke(object);
-            serializer.out.writeObject(getter.fieldName, value);
+            out.writeObject(getter.fieldName, value);
         }
-        serializer.out.end();
+        out.end();
     }
 }
