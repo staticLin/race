@@ -6,14 +6,20 @@ import race.question.demo.json.ObjectSerializer;
 /**
  * @author linyh
  */
-public class EnumSerializer implements ObjectSerializer {
+public final class EnumSerializer implements ObjectSerializer {
 
+    /**
+     * 单例
+     */
     public static final EnumSerializer INSTANCE = new EnumSerializer();
 
-    @Override
-    public void write(JSONSerializer serializer, Object value) throws Exception {
+    private EnumSerializer() {
+    }
 
-        Enum a = (Enum) value;
-        serializer.out.writeFieldValueStringWithDoubleQuote(a.name());
+    @Override
+    public void write(final JSONSerializer serializer, final Object value) throws Exception {
+
+        final Enum enumValue = (Enum) value;
+        serializer.out.writeFieldValueStringWithDoubleQuote(enumValue.name());
     }
 }

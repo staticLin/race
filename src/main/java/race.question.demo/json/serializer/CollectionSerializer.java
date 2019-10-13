@@ -11,24 +11,30 @@ import java.util.Iterator;
 /**
  * @author linyh
  */
-public class CollectionSerializer implements ObjectSerializer {
+public final class CollectionSerializer implements ObjectSerializer {
 
+    /**
+     * 单例
+     */
     public static final CollectionSerializer INSTANCE = new CollectionSerializer();
 
-    @Override
-    public void write(JSONSerializer serializer, Object object) throws Exception {
+    private CollectionSerializer() {
+    }
 
-        Collection list = (Collection) object;
-        SerializeWriter out = serializer.out;
+    @Override
+    public void write(final JSONSerializer serializer, final Object object) throws Exception {
+
+        final Collection list = (Collection) object;
+        final SerializeWriter out = serializer.out;
 
         out.write('[');
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
 
-            Iterator iterator = list.iterator();
-            Object element = iterator.next();
-            Class eleClass = element.getClass();
+            final Iterator iterator = list.iterator();
+            final Object element = iterator.next();
+            final Class eleClass = element.getClass();
 
-            ObjectSerializer objectSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(element.getClass());
+            final ObjectSerializer objectSerializer = SerializeConfig.GLOBAL_INSTANCE.getObjectWriter(element.getClass());
 
             if (!plainValue(eleClass)) {
                 out.preSymbol = '{';
@@ -46,7 +52,7 @@ public class CollectionSerializer implements ObjectSerializer {
         out.preSymbol = ',';
     }
 
-    private boolean plainValue(Class eleClass) {
+    private boolean plainValue(final Class eleClass) {
 
         return Enum.class.isAssignableFrom(eleClass)
                 || String.class.isAssignableFrom(eleClass)

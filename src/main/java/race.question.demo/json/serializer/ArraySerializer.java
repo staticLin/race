@@ -8,13 +8,22 @@ import race.question.demo.json.SerializeWriter;
 /**
  * @author linyh
  */
-public class ArraySerializer implements ObjectSerializer {
+public final class ArraySerializer implements ObjectSerializer {
 
+    /**
+     * 单例
+     */
     public static final ArraySerializer INSTANCE = new ArraySerializer();
 
     private ArraySerializer() {
     }
 
+    /**
+     * 数组的序列化方式
+     * @param serializer
+     * @param value
+     * @throws Exception
+     */
     @Override
     public void write(final JSONSerializer serializer, final Object value) throws Exception {
 
