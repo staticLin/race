@@ -193,10 +193,6 @@ public class SerializeConfig {
             asmSerializer = new JavaBeanSerializer(beanInfo);
         }
 
-        if (asmSerializer == null) {
-            asmSerializer = new JavaBeanSerializer(beanInfo);
-        }
-
         return asmSerializer;
     }
 
